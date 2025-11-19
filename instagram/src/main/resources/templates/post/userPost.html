@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>userPostList</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
 <body>
-<div th:each="post: ${userPostList}">
+<div th:each="post: ${userPostList}" id="postBox">
     <p th:text="${post.userId}"></p>
     <p th:text="${post.title}"></p>
     <p th:text="${post.textContent}"></p>
