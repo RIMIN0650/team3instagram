@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>userPostList</title>
+</head>
+<body>
+<div th:each="post: ${userPostList}">
+    <p th:text="${post.userId}"></p>
+    <p th:text="${post.title}"></p>
+    <p th:text="${post.textContent}"></p>
+    <p th:text="${post.createdAt}"></p>
+</div>
+</body>
+</html>

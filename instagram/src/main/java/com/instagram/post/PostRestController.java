@@ -18,15 +18,15 @@ public class PostRestController {
     private final PostService postService;
 
     @PostMapping("/post/newpost")
-    public Map<String, String> uploadPost(String title, String textContent, HttpSession session){
+    public Map<String, String> uploadPost(String title, String textContent, HttpSession session) {
 
-        String id = (String)session.getAttribute("id");
+        String id = (String) session.getAttribute("id");
 
         Post post = postService.addPost(id, title, textContent);
 
         Map<String, String> resultMap = new HashMap<>();
 
-        if(post != null){
+        if (post != null) {
             resultMap.put("result", "success");
         } else {
             resultMap.put("result", "fail");
@@ -34,7 +34,5 @@ public class PostRestController {
 
         return resultMap;
     }
-
-
 
 }

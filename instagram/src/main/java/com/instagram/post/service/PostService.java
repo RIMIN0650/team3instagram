@@ -30,5 +30,12 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    
+    // 사용자 아이디로 게시물 검색하기
+    public List<Post> findPostByUserId(String userId){
+        return postRepository.findByUserId(userId);
+    }
+
+
 
 }
