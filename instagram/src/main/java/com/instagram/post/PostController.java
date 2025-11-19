@@ -28,4 +28,11 @@ public class PostController {
     }
 
 
+    @GetMapping("/post/modify")
+    public String updatePost(int postId, Model model) {
+
+        Post post = postService.findByPostId(postId);
+        model.addAttribute("post", post);
+        return "post/modify";
+    }
 }

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,6 +38,26 @@ public class PostService {
         return postRepository.findByUserId(userId);
     }
 
+    // 게시물 수정하기
+    public Post updatePost(int postId, String title, String textContent){
 
+        Post post = postRepository.findByPostId(postId);
+
+        if(post != null) {
+            post = post.toBuilder()
+                    .title(title)
+                    .textContent(textContent)
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+            post = postRepository.save(post);
+        }
+
+        return post;
+    }
+    
+    // 게시물 아이디로 게시물 검색하기
+    public Post findByPostId(int postId){
+        return postRepository.findByPostId(postId);
+    }
 
 }

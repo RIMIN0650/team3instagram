@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,5 +36,27 @@ public class PostRestController {
 
         return resultMap;
     }
+
+
+    // 게시물 수정
+    @PutMapping("/post")
+    public Map<String, String> modifyPost(int postId, String title, String textContent){
+
+        Post post = postService.updatePost(postId, title, textContent);
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        if(post != null){
+            resultMap.put("result", "success");
+        } else {
+            resultMap.put("result", "fail");
+        }
+
+        return resultMap;
+
+    }
+
+
+
 
 }

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name="post")
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 public class Post {
 
     @Id

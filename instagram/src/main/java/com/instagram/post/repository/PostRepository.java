@@ -9,4 +9,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     public List<Post> findByUserId(String userId);
 
+    public Post findByPostId(int postId);
+
 }
