@@ -7,6 +7,8 @@ import com.instagram.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,13 @@ public class UserService {
         return user;
     }
     
+    // 사용자 정보 불러오기
+    public User findUser(String userId){
 
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElse(null);
+        return user;
+
+    }
 
 }

@@ -1,7 +1,9 @@
 package com.instagram.user;
 
 import com.instagram.user.domain.Profile;
+import com.instagram.user.domain.User;
 import com.instagram.user.service.ProfileService;
+import com.instagram.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class UserController {
 
     private final ProfileService profileService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String login(){
@@ -50,7 +53,9 @@ public class UserController {
     public String getUserInfo(String id, Model model){
 
         Profile profile = profileService.getProfile(id);
+        User user = userService.findUser(id);
 
+        model.addAttribute("user", user);
         model.addAttribute("profile", profile);
 
         return "user/viewProfile";

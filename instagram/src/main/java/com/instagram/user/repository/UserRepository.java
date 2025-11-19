@@ -3,6 +3,8 @@ package com.instagram.user.repository;
 import com.instagram.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, String> {
 
     // 사용자 로그인
@@ -12,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     public int countByEmail(String email);
     
     public User findByEmail(String email);
+
+    public Optional<User> findById(String userId);
 }
