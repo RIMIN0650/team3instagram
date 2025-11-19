@@ -60,4 +60,12 @@ public class PostService {
         return postRepository.findByPostId(postId);
     }
 
+    public Post deletePost(int postId){
+        Post post = postRepository.findByPostId(postId);
+        if(post != null){
+            postRepository.delete(post);
+        }
+        return post;
+    }
+
 }

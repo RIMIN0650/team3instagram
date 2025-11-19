@@ -5,6 +5,7 @@ import com.instagram.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,7 +57,21 @@ public class PostRestController {
 
     }
 
+    @DeleteMapping("/post")
+    public Map<String, String> deletePost(int postId){
 
+        Post post = postService.deletePost(postId);
+
+        Map<String, String> resultMap = new HashMap<>();
+
+        if(post != null){
+            resultMap.put("result", "success");
+        } else {
+            resultMap.put("result", "fail");
+        }
+
+        return resultMap;
+    }
 
 
 }
