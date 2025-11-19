@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Set Profile</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <h1>님의</h1>
+  <h3>프로필 설정 페이지</h3>
+
+  <input type="text" class="form-control" placeholder="display_name" id="display_name">
+  <input type="text" class="form-control" placeholder="bio" id="bio">
+  <div>
+    <p>Gender</p>
+    <button type="button" class="btn btn-info" id="maleBtn">Male</button>
+    <button type="button" class="btn btn-danger" id="femaleBtn">Female</button>
+  </div>
+  <div>
+    <input type="text" class="form-control" placeholder="year" id="birthYear">
+    <input type="text" class="form-control" placeholder="month" id="birthMonth">
+    <input type="text" class="form-control" placeholder="date" id="birthDate">
+  </div>
+  <button type="button" class="btn btn-success" id="profileSaveBtn">개인 정보 등록</button>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+  <script>
+    $(document).ready(function(){
+
+      let selectedGender = null;
+
+      $("#maleBtn").on("click", function () {
+          selectedGender = "male";
+          $("#maleBtn").removeClass("btn-info").addClass("btn-primary");
+          $("#femaleBtn").removeClass("btn-primary btn-danger").addClass("btn-danger");
+      });
+
+      $("#femaleBtn").on("click", function () {
+          selectedGender = "female";
+          $("#femaleBtn").removeClass("btn-danger").addClass("btn-primary");
+          $("#maleBtn").removeClass("btn-primary btn-info").addClass("btn-info");
+      });
+
+      $("#profileSaveBtn").on("click", function(){
+
+        let displayName = $("#display_name").val();
+        let bio = $("#bio").val();
+
+        let birthYear = $("#birthYear").val();
+        let birthMonth = $("#birthMonth").val().padStart(2, '0'); // 1 → 01
+        let birthDate = $("#birthDate").val().padStart(2, '0');   // 2 → 02
+
+        // yyyy-MM-dd 형태로 만들기
+        let birth = `${birthYear}-${birthMonth}-${birthDate}`;
+
+        $.ajax({
+          type: "post",
+          url: "/user/profile",
+          data: {
+            displayName: displayName,
+            bio: bio,
+            gender: selectedGender,
+            birthDate: birth
+          },
+          success: function(data){
+            if(data.result == "success"){
+              alert("프로필 저장 완료");
+              location.href="/main";
+            } else {
+              alert("프로필 저장 실패");
+            }
+          }
+          , error: function(){
+            alert("프로필 저장 에러");
+          }
+        });
+
+      });
+
+    });
+  </script>
+
+
+
+
+</body>
+</html>

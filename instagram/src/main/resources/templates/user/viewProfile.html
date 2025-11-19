@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 프로필 정보 조회</title>
+</head>
+<body>
+    <h3></h3>
+    <p th:text="${profile.displayName}"></p><p>님의</p>
+    <hr>
+    상태메세지<p th:text="${profile.bio}"></p>
+    <hr>
+    성별<p th:text="${profile.gender}"></p>
+    <hr>
+    생일<p th:text="${profile.birthDate}"></p>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+
+
+    <input type="text" class="form-control" placeholder="title" id="title">
+    <input type="text" class="form-control" placeholder="text_content" id="textContent">
+    <button type="button" class="btn btn-info" id="uploadBtn">upload</button>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+
+    <script>
+    $(document).ready(function(){
+
+        $("#uploadBtn").on("click",function(){
+
+            let title = $("#title").val();
+            let textContent = $("#textContent").val();
+
+            $.ajax({
+                type:"post"
+                , url:"/post/newpost"
+                , data:{"title":title, "textContent":textContent}
+                , success:function(data){
+                    if(data.result == "success"){
+                        alert("게시물 등록 성공!");
+                        location.href="/main";
+                    } else {
+                        alert("게시물 등록 실패!");
+                    }
+                }
+                , error:function(){
+                    alert("게시물 등록 에러");
+                }
+
+            });
+        });
+    });
+
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f0f4f8;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        #join-box {
+            width: 400px;
+            padding: 35px 30px;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 28px;
+            font-weight: 700;
+            color: #004085;
+        }
+
+        .form-control {
+            height: 45px;
+            border-radius: 8px !important;
+            border: 1px solid #ced4da;
+        }
+
+        /* input-group 둥글게 만드는 핵심! */
+        .input-group>.form-control {
+            border-radius: 8px 0 0 8px !important;
+        }
+        .input-group>.input-group-append>.btn {
+            border-radius: 0 8px 8px 0 !important;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .btn-outline-primary {
+            border-radius: 0 8px 8px 0 !important;
+        }
+
+        .result-msg {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="join-box">
+    <h2>Join</h2>
+
+    <!-- 학번 -->
+    <div class="mb-3">
+        <label class="font-weight-bold">학번</label>
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="student number" id="id">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="button" id="studentNumberDupCheckBtn">중복확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 이메일 -->
+    <div class="mb-3">
+        <label class="font-weight-bold">이메일</label>
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="email" id="email">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="button" id="emailDupCheckBtn">중복확인</button>
+            </div>
+        </div>
+
+        <div>
+            <div class="result-msg text-danger d-none" id="dupEmail">중복된 이메일입니다.</div>
+            <div class="result-msg text-success d-none" id="possEmail">사용 가능한 이메일입니다.</div>
+        </div>
+    </div>
+
+    <!-- 비밀번호 -->
+    <div class="mb-3">
+        <label class="font-weight-bold">비밀번호</label>
+        <input type="password" class="form-control" placeholder="password" id="password">
+    </div>
+
+    <!-- 가입 버튼 -->
+    <button type="button" class="btn btn-primary w-100 mt-3" id="joinBtn">Join</button>
+</div>
+
+
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+
+        var isDupEmail = true;
+        var isDupCheck = false;
+
+        $("#email").on("input",function(){
+            isDupEmail = true;
+            isDupCheck = false;
+            $("#dupEmail").addClass("d-none");
+            $("#possEmail").addClass("d-none");
+        });
+
+        $("#emailDupCheckBtn").on("click", function(){
+            let email = $("#email").val();
+
+            if(email == ""){
+                alert("이메일을 입력하세요");
+                return;
+            }
+
+            $.ajax({
+                type:"get",
+                url:"/user/duplicate-email",
+                data:{"email":email},
+                success:function(data){
+                    isDupCheck = true;
+
+                    if(data.isDuplicated){
+                        isDupEmail = true;
+                        $("#dupEmail").removeClass("d-none");
+                        $("#possEmail").addClass("d-none");
+                    } else {
+                        isDupEmail = false;
+                        $("#dupEmail").addClass("d-none");
+                        $("#possEmail").removeClass("d-none");
+                    }
+                },
+                error:function() {
+                    alert("중복 확인 에러");
+                }
+            });
+        });
+
+        $("#joinBtn").on("click", function(){
+
+            let id = $("#id").val();
+            let email = $("#email").val();
+            let password = $("#password").val();
+
+            if(!isDupCheck){
+                alert("이메일 중복확인을 해주세요");
+                return;
+            }
+
+            if(isDupEmail){
+                alert("중복된 이메일입니다");
+                return;
+            }
+
+            $.ajax({
+                type:"POST",
+                url:"/user/join",
+                data:{"id":id, "email":email, "password":password},
+                success:function(data){
+                    if(data.result == "success"){
+                        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
+                        location.href="/login"
+                    } else {
+                        alert("회원가입 실패");
+                    }
+                },
+                error:function(){
+                    alert("회원가입 에러");
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

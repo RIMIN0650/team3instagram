@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f7f9fc;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        #login-box {
+            width: 380px;
+            padding: 30px;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+            height: 45px;
+            border-radius: 8px;
+        }
+
+        #loginBtn {
+            width: 100%;
+            height: 45px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-box">
+    <h2>Login</h2>
+
+    <input type="text" class="form-control" placeholder="email" id="email">
+    <input type="password" class="form-control" placeholder="password" id="password">
+
+    <button type="button" class="btn btn-info" id="loginBtn">Login</button>
+</div>
+
+
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+
+        $("#loginBtn").on("click", function(){
+
+            let email = $("#email").val();
+            let password = $("#password").val();
+
+            $.ajax({
+                type: "post",
+                url: "/user/login",
+                data: {"email":email, "password":password},
+                success: function(data){
+                    if(data.result === "success"){
+                        alert("로그인 성공! 환영합니다!");
+                        location.href = "/main";
+                    } else {
+                        alert("로그인 실패! 이메일 또는 비밀번호가 틀립니다.");
+                    }
+                },
+                error: function(){
+                    alert("로그인 오류 발생");
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>
