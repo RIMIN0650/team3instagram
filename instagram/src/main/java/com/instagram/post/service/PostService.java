@@ -1,6 +1,8 @@
 package com.instagram.post.service;
 
+import com.instagram.like.service.LikeService;
 import com.instagram.post.domain.Post;
+import com.instagram.post.dto.PostDetail;
 import com.instagram.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +18,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final LikeService likeService;
 
     // 신규 게시물 등록
     public Post addPost(String userId, String title, String textContent){
@@ -67,5 +71,43 @@ public class PostService {
         }
         return post;
     }
+
+    public List<PostDetail> getPostDetailList(String loginUserId){
+
+        List<Post> postList = postRepository.findAll();
+
+        List<PostDetail> postDetailList = new ArrayList<>();
+
+
+
+
+        for(Post post : postList){
+
+            PostDetail postDetail = PostDetail.builder()
+                    .postId(post.getPostId())
+                    .userId(post.getUserId())
+                    .likeCount(likeService.likeCount(post.getPostId()))
+                    .dislikeCount(likeService.dislikeCount(post.getPostId()))
+                    .isLike(likeService.isLikeByUser(loginUserId, post.getPostId()))
+                    .isDislike(likeService.isDislikeByUser(loginUserId, post.getPostId()))
+                    .title(post.getTitle())
+                    .textContent(post.getTextContent())
+                    .createdAt(post.getCreatedAt())
+                    .updatedAt(post.getUpdatedAt())
+                    .build();
+
+            postDetailList.add(postDetail);
+
+
+
+
+        }
+
+        return postDetailList;
+    }
+
+
+
+
 
 }

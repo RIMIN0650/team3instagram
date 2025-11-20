@@ -15,15 +15,21 @@
 </div>
 
 
-<div th:each="post: ${postList}" class="postBox mt-5">
+<div th:each="post: ${postDetail}" class="postBox mt-5">
     <p th:text="'작성자 : ' + ${post.userId}"></p>
     <p th:text="'제목 : ' + ${post.title}"></p>
     <p th:text="'내용 : ' + ${post.textContent}"></p>
     <p th:text="'작성일 : ' + ${post.createdAt}"></p>
     <p th:text="'수정일 : ' + ${post.updatedAt}" class="d-none"></p>
 
-    <button type="button" class="likeBtn">👍</button>
-    <button type="button" class="dislikeBtn">👎</button>
+    <p th:text="'좋아요 개수 : ' + ${post.likeCount}"></p>
+    <p th:text="'싫어요 개수 : ' + ${post.dislikeCount}"></p>
+    <p th:text="'좋아요 판단 : ' + ${post.isLike}"></p>
+    <p th:text="'싫어요 판단 : ' + ${post.isDislike}"></p>
+
+
+    <button type="button" class="likeBtn" th:data-post-id="${post.postId}">👍</button>
+    <button type="button" class="dislikeBtn" th:data-post-id="${post.postId}">👎</button>
 
     <button type="button" class="deleteBtn" th:data-post-id="${post.postId}">
         게시글 삭제
@@ -64,11 +70,47 @@
         });
 
         $(".likeBtn").on("click", function(){
-            alert("likeBtn");
+            let postId = $(this).data("post-id");
+            let isLike = 1;
+            $.ajax({
+                type:"POST"
+                , url:"/post/like"
+                , data:{"postId":postId, "isLike":isLike}
+                , success:function(data){
+                    if(data.result == "success"){
+                        alert("좋아요 성공");
+                        location.reload();
+                    } else {
+                        alert("좋아요 실패");
+                    }
+                }
+                , error:function(){
+                    alert("좋아요 에러");
+                }
+
+            });
         });
 
         $(".dislikeBtn").on("click", function(){
-            alert("dislikeBtn");
+            let postId = $(this).data("post-id");
+            let isLike = 0;
+
+            $.ajax({
+                type:"POST"
+                , url:"/post/like"
+                , data:{"postId":postId, "isLike":isLike}
+                , success:function(data){
+                    if(data.result == "success"){
+                        alert("싫어요 성공");
+                        location.reload();
+                    } else {
+                        alert("싫어요 실패");
+                    }
+                }
+                , error:function(){
+                    alert("싫어요 에러");
+                }
+            });
         });
 
         $("#searchBtn").on("click",function(){

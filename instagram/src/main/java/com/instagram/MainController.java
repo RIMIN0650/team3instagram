@@ -1,6 +1,7 @@
 package com.instagram;
 
 import com.instagram.post.domain.Post;
+import com.instagram.post.dto.PostDetail;
 import com.instagram.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,13 @@ public class MainController {
     @GetMapping("/main")
     String mainPage(HttpSession session, Model model) {
 
-        List<Post> postList = postService.getAllPost();
-        model.addAttribute("postList", postList);
+//        List<Post> postList = postService.getAllPost();
+//        model.addAttribute("postList", postList);
+//
+        String userId = (String)session.getAttribute("id");
+
+        List<PostDetail> postDetailList = postService.getPostDetailList(userId);
+        model.addAttribute("postDetail", postDetailList);
 
         return "main.html";
     }
