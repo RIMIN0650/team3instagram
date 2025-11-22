@@ -1,5 +1,7 @@
 package com.instagram.post.service;
 
+import com.instagram.like.domain.Like;
+import com.instagram.like.repository.LikeRepository;
 import com.instagram.like.service.LikeService;
 import com.instagram.post.domain.Post;
 import com.instagram.post.dto.PostDetail;
@@ -19,6 +21,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final LikeService likeService;
+    private final LikeRepository likeRepository;
 
     // 신규 게시물 등록
     public Post addPost(String userId, String title, String textContent){
@@ -72,6 +75,8 @@ public class PostService {
         return post;
     }
 
+
+
     public List<PostDetail> getPostDetailList(String loginUserId){
 
         List<Post> postList = postRepository.findAll();
@@ -106,7 +111,16 @@ public class PostService {
         return postDetailList;
     }
 
-
+    // 이 사용자가 좋아요, 싫어요 누른 게시물 찾기, 좋아요 : 1, 싫어요 : 0
+    public List<Post> findPostLikeByUser(String userId, int likeStatus){
+        List<Like> likeList = likeRepository.findByLikeStatusAndUserId(likeStatus, userId);
+        List<Post> postList = new ArrayList<>();
+        for(Like like : likeList){
+            Post post = postRepository.findByPostId(like.getPostId());
+            postList.add(post);
+        }
+        return postList;
+    }
 
 
 
