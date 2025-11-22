@@ -24,23 +24,18 @@
 
     <p th:text="'좋아요 개수 : ' + ${post.likeCount}"></p>
     <p th:text="'싫어요 개수 : ' + ${post.dislikeCount}"></p>
-    
-
 
     <div th:if="${!post.isLike and !post.isDislike}">
-        <button type="button" class="likeBtn" th:data-post-id="${post.postId}">👍</button>
-        <button type="button" class="dislikeBtn" th:data-post-id="${post.postId}">👎</button>
+        <button type="button" class="likeBtn btn btn-outline-success" th:data-post-id="${post.postId}">👍</button>
+        <button type="button" class="dislikeBtn btn btn-outline-danger" th:data-post-id="${post.postId}">👎</button>
     </div>
-
     <div th:if="${post.isLike}">
-        <button type="button" class="likeCancelBtn btn btn-success" th:data-post-id="${post.postId}">👍취소</button>
-        <button type="button" class="dislikeBtn btn btn-danger" th:data-post-id="${post.postId}">👎</button>
+        <button type="button" class="likeCancelBtn btn btn-success" th:data-post-id="${post.postId}">👍</button>
+        <button type="button" class="dislikeBtn btn btn-outline-danger" th:data-post-id="${post.postId}">👎</button>
     </div>
-
-
     <div th:if="${post.isDislike}">
-        <button type="button" class="likeBtn btn btn-success" th:data-post-id="${post.postId}">👍</button>
-        <button type="button" class="dislikeCancelBtn btn btn-danger" th:data-post-id="${post.postId}">👎취소</button>
+        <button type="button" class="likeBtn btn btn-outline-success" th:data-post-id="${post.postId}">👍</button>
+        <button type="button" class="dislikeCancelBtn btn btn-danger" th:data-post-id="${post.postId}">👎</button>
     </div>
 
     <button type="button" class="deleteBtn" th:data-post-id="${post.postId}">
@@ -59,6 +54,44 @@
 <script>
     $(document).ready(function(){
 
+        $(".likeCancelBtn").on("click", function(){
+            let postId = $(this).data("post-id");
+            $.ajax({
+                type:"delete"
+                , url:"/post/like"
+                , data:{"postId":postId}
+                , success:function(data){
+                    if(data.result == "success"){
+                        location.reload();
+                    } else {
+                        alert("좋아요 취소 실패");
+                    }
+                }
+                , error:function(){
+                    alert("좋아요 취소 에러");
+                }
+            });
+        });
+
+        $(".dislikeCancelBtn").on("click", function(){
+            let postId = $(this).data("post-id");
+            $.ajax({
+                type:"delete"
+                , url:"/post/like"
+                , data:{"postId":postId}
+                , success:function(data){
+                    if(data.result == "success"){
+                        location.reload();
+                    } else {
+                        alert("싫어요 취소 실패");
+                    }
+                }
+                , error:function(){
+                    alert("싫어요 취소 에러");
+                }
+            });
+        });
+
         $(".deleteBtn").on("click", function(){
             let postId = $(this).data("post-id");
 
@@ -68,7 +101,7 @@
                 , data:{"postId":postId}
                 , success:function(data){
                     if(data.result == "success"){
-                        alert("삭제 성공");
+                        alert("게시물이 삭제되었습니다.");
                         location.reload();
                     } else {
                         alert("삭제 실패");
@@ -90,7 +123,6 @@
                 , data:{"postId":postId, "isLike":isLike}
                 , success:function(data){
                     if(data.result == "success"){
-                        alert("좋아요 성공");
                         location.reload();
                     } else {
                         alert("좋아요 실패");
@@ -113,7 +145,6 @@
                 , data:{"postId":postId, "isLike":isLike}
                 , success:function(data){
                     if(data.result == "success"){
-                        alert("싫어요 성공");
                         location.reload();
                     } else {
                         alert("싫어요 실패");

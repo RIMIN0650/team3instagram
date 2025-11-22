@@ -45,5 +45,13 @@ public class LikeService {
         return count > 0;
     }
 
+    public Like deleteLike(int postId, String userId){
+        Like like = likeRepository.findByPostIdAndUserId(postId, userId);
+        if(like != null)
+            likeRepository.delete(like);
+        return like;
+    }
+
+
 
 }

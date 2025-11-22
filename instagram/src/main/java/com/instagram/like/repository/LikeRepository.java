@@ -14,4 +14,6 @@ public interface LikeRepository extends JpaRepository<Like, LikeId> {
     // 특정 사람이 좋아요를 했는지 판단하기 위함
     public int countByLikeStatusAndPostIdAndUserId(int isLike, int postId, String userId);
 
+    // 특정 사람의 특정 게시물에 대한 반응 찾기
+    public Like findByPostIdAndUserId(int postId, String userId);
 }
