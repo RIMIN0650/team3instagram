@@ -35,4 +35,13 @@ public class PostController {
         model.addAttribute("post", post);
         return "post/modify";
     }
+    
+    // 게시글 상세페이지
+    @GetMapping("/post/detail")
+    public String getPostDetail(int postId, Model model){
+        Post post = postService.findByPostId(postId);
+        model.addAttribute("post", post);
+        return "post/detail";
+    }
+
 }
