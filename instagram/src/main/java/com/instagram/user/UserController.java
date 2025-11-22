@@ -47,7 +47,6 @@ public class UserController {
 
         return "user/changePassword";
     }
-
     // 사용자 정보 조회
     @GetMapping("/user/info")
     public String getUserInfo(String id, Model model){

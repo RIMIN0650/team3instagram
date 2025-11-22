@@ -24,12 +24,24 @@
 
     <p th:text="'좋아요 개수 : ' + ${post.likeCount}"></p>
     <p th:text="'싫어요 개수 : ' + ${post.dislikeCount}"></p>
-    <p th:text="'좋아요 판단 : ' + ${post.isLike}"></p>
-    <p th:text="'싫어요 판단 : ' + ${post.isDislike}"></p>
+    
 
 
-    <button type="button" class="likeBtn" th:data-post-id="${post.postId}">👍</button>
-    <button type="button" class="dislikeBtn" th:data-post-id="${post.postId}">👎</button>
+    <div th:if="${!post.isLike and !post.isDislike}">
+        <button type="button" class="likeBtn" th:data-post-id="${post.postId}">👍</button>
+        <button type="button" class="dislikeBtn" th:data-post-id="${post.postId}">👎</button>
+    </div>
+
+    <div th:if="${post.isLike}">
+        <button type="button" class="likeCancelBtn btn btn-success" th:data-post-id="${post.postId}">👍취소</button>
+        <button type="button" class="dislikeBtn btn btn-danger" th:data-post-id="${post.postId}">👎</button>
+    </div>
+
+
+    <div th:if="${post.isDislike}">
+        <button type="button" class="likeBtn btn btn-success" th:data-post-id="${post.postId}">👍</button>
+        <button type="button" class="dislikeCancelBtn btn btn-danger" th:data-post-id="${post.postId}">👎취소</button>
+    </div>
 
     <button type="button" class="deleteBtn" th:data-post-id="${post.postId}">
         게시글 삭제
