@@ -67,6 +67,7 @@ public class PostService {
         return postRepository.findByPostId(postId);
     }
 
+    // 게시물 삭제
     public Post deletePost(int postId){
         Post post = postRepository.findByPostId(postId);
         if(post != null){
@@ -120,6 +121,27 @@ public class PostService {
             postList.add(post);
         }
         return postList;
+    }
+
+
+
+    // 게시글 상세 정보
+    public PostDetail getPostDetail(int postId, String loginUserId) {
+        Post post = postRepository.findByPostId(postId);
+
+        PostDetail postDetail = PostDetail.builder()
+                .postId(post.getPostId())
+                .userId(post.getUserId())
+                .likeCount(likeService.likeCount(post.getPostId()))
+                .dislikeCount(likeService.dislikeCount(post.getPostId()))
+                .isLike(likeService.isLikeByUser(loginUserId, post.getPostId()))
+                .isDislike(likeService.isDislikeByUser(loginUserId, post.getPostId()))
+                .title(post.getTitle())
+                .textContent(post.getTextContent())
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+        return postDetail;
     }
 
 

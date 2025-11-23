@@ -6,10 +6,15 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PostDetail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
 <body>
-    <h2>게시글 상세페이지</h2>
+
+<div th:each="post: ${postDetail}" class="postDetailBox">
+
+    <h3 class="mb-4">게시글 상세</h3>
 
     <p th:text="'작성자 : ' + ${post.userId}"></p>
     <p th:text="'제목 : ' + ${post.title}"></p>
@@ -19,9 +24,180 @@
 
 
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- 좋아요 / 싫어요 버튼 영역 -->
+    <div class="reaction-area">
+        <div th:if="${!post.isLike and !post.isDislike}" class="d-flex gap-2 mt-3">
+            <button type="button" class="likeBtn btn btn-outline-success d-flex align-items-center gap-2"
+                    th:data-post-id="${post.postId}">
+                👍
+                <span th:text="${post.likeCount}">0</span>
+            </button>
 
+            <button type="button" class="dislikeBtn btn btn-outline-danger d-flex align-items-center gap-2"
+                    th:data-post-id="${post.postId}">
+                👎
+                <span th:text="${post.dislikeCount}">0</span>
+            </button>
+        </div>
+
+
+        <div th:if="${post.isLike}" class="d-flex gap-2 mt-3">
+            <button type="button" class="likeCancelBtn btn btn-success d-flex align-items-center gap-2"
+                    th:data-post-id="${post.postId}">
+                👍
+                <span th:text="${post.likeCount}">0</span>
+            </button>
+
+            <button type="button" class="dislikeBtn btn btn-outline-danger d-flex align-items-center gap-2"
+                    th:data-post-id="${post.postId}">
+                👎
+                <span th:text="${post.dislikeCount}">0</span>
+            </button>
+        </div>
+
+        <div th:if="${post.isDislike}" class="d-flex gap-2 mt-3">
+            <button type="button" class="likeBtn btn btn-outline-success d-flex align-items-center gap-2"
+                    th:data-post-id="${post.postId}">
+                👍
+                <span th:text="${post.likeCount}">0</span>
+            </button>
+
+            <button type="button" class="dislikeCancelBtn btn btn-danger d-flex align-items-center gap-2"
+                    th:data-post-id="${post.postId}">
+                👎
+                <span th:text="${post.dislikeCount}">0</span>
+            </button>
+        </div>
+
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+        <button type="button" class="deleteBtn btn btn-warning"
+                th:data-post-id="${post.postId}">
+            게시글 삭제
+        </button>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+
+            $('#newTextContent').on('input', function(){
+                this.style.height = 'auto'; // 기존 높이 초기화
+                this.style.height = (this.scrollHeight) + 'px'; // 내용에 맞춰 높이 조절
+            });
+
+
+            $(".likeCancelBtn").on("click", function(){
+                let postId = $(this).data("post-id");
+                $.ajax({
+                    type:"delete"
+                    , url:"/post/like"
+                    , data:{"postId":postId}
+                    , success:function(data){
+                        if(data.result == "success"){
+                            location.reload();
+                        } else {
+                            alert("좋아요 취소 실패");
+                        }
+                    }
+                    , error:function(){
+                        alert("좋아요 취소 에러");
+                    }
+                });
+            });
+
+            $(".dislikeCancelBtn").on("click", function(){
+                let postId = $(this).data("post-id");
+                $.ajax({
+                    type:"delete"
+                    , url:"/post/like"
+                    , data:{"postId":postId}
+                    , success:function(data){
+                        if(data.result == "success"){
+                            location.reload();
+                        } else {
+                            alert("싫어요 취소 실패");
+                        }
+                    }
+                    , error:function(){
+                        alert("싫어요 취소 에러");
+                    }
+                });
+            });
+
+            $(".deleteBtn").on("click", function(){
+                let postId = $(this).data("post-id");
+
+                $.ajax({
+                    type:"delete"
+                    , url:"/post"
+                    , data:{"postId":postId}
+                    , success:function(data){
+                        if(data.result == "success"){
+                            alert("게시물이 삭제되었습니다.");
+                            location.reload();
+                        } else {
+                            alert("삭제 실패");
+                        }
+                    }
+                    , error:function(){
+                        alert("삭제 에러");
+                    }
+                });
+
+            });
+
+            $(".likeBtn").on("click", function(){
+                let postId = $(this).data("post-id");
+                let isLike = 1;
+                $.ajax({
+                    type:"POST"
+                    , url:"/post/like"
+                    , data:{"postId":postId, "isLike":isLike}
+                    , success:function(data){
+                        if(data.result == "success"){
+                            location.reload();
+                        } else {
+                            alert("좋아요 실패");
+                        }
+                    }
+                    , error:function(){
+                        alert("로그인이 필요합니다");
+                    }
+
+                });
+            });
+
+            $(".dislikeBtn").on("click", function(){
+                let postId = $(this).data("post-id");
+                let isLike = 0;
+
+                $.ajax({
+                    type:"POST"
+                    , url:"/post/like"
+                    , data:{"postId":postId, "isLike":isLike}
+                    , success:function(data){
+                        if(data.result == "success"){
+                            location.reload();
+                        } else {
+                            alert("싫어요 실패");
+                        }
+                    }
+                    , error:function(){
+                        alert("로그인이 필요합니다");
+                    }
+                });
+            });
+
+
+        });
+
+
+
+    </script>
 </body>
 </html>

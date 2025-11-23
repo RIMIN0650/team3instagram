@@ -3,52 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Main</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 </head>
 <body>
+    <div id="wrap">
+        <div th:replace="~{ include/nav.html :: navbar}"></div>
 
-<div th:replace="~{ include/nav.html :: navbar}"></div>
+        <div class="search-area">
+            <input type="text" class="form-control" placeholder="search" id="userId">
+            <button type="button" id="searchBtn">검색</button>
+        </div>
 
-<div class="d-flex">
-    <input type="text" class="form-control w-25" placeholder="search" id="userId">
-    <button type="button" class="btn btn-success" id="searchBtn">search</button>
-</div>
+        <div th:each="post : ${postList}" class="postBox"
+             th:onclick="'location.href=\'/post/detail?postId=' + ${post.postId} + '\';'">
 
+            <p th:text="'작성자 : ' + ${post.userId}"></p>
+            <p th:text="'제목 : ' + ${post.title}"></p>
+            <p th:text="'내용 : ' + ${post.textContent}" class="d-none"></p>
 
-<div th:each="post: ${postDetail}" class="postBox mt-5">
-    <p th:text="'작성자 : ' + ${post.userId}"></p>
-    <p th:text="'제목 : ' + ${post.title}"></p>
-    <p th:text="'내용 : ' + ${post.textContent}"></p>
-    <p th:text="'작성일 : ' + ${post.createdAt}"></p>
-    <p th:text="'수정일 : ' + ${post.updatedAt}" class="d-none"></p>
+            <div class="bottom-right">
+                <button type="button" class="modifyBtn btn btn-sm btn-outline-warning" th:data-post-id="${post.postId}">
+                    수정
+                </button>
+                <button type="button" class="deleteBtn btn btn-sm btn-outline-danger" th:data-post-id="${post.postId}">
+                    삭제
+                </button>
+            </div>
+        </div>
 
-    <p th:text="'좋아요 개수 : ' + ${post.likeCount}"></p>
-    <p th:text="'싫어요 개수 : ' + ${post.dislikeCount}"></p>
-
-    <div th:if="${!post.isLike and !post.isDislike}">
-        <button type="button" class="likeBtn btn btn-outline-success" th:data-post-id="${post.postId}">👍</button>
-        <button type="button" class="dislikeBtn btn btn-outline-danger" th:data-post-id="${post.postId}">👎</button>
-    </div>
-    <div th:if="${post.isLike}">
-        <button type="button" class="likeCancelBtn btn btn-success" th:data-post-id="${post.postId}">👍</button>
-        <button type="button" class="dislikeBtn btn btn-outline-danger" th:data-post-id="${post.postId}">👎</button>
-    </div>
-    <div th:if="${post.isDislike}">
-        <button type="button" class="likeBtn btn btn-outline-success" th:data-post-id="${post.postId}">👍</button>
-        <button type="button" class="dislikeCancelBtn btn btn-danger" th:data-post-id="${post.postId}">👎</button>
     </div>
 
-    <button type="button" class="deleteBtn" th:data-post-id="${post.postId}">
-        게시글 삭제
-    </button>
-</div>
 
 
 
-
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 <script>
@@ -158,8 +148,17 @@
 
         $("#searchBtn").on("click",function(){
             let userId = $("#userId").val();
-            window.location.href = "/post/user?userId=" + userId;
+            window.location.href = "/user/mypage?userId=" + userId;
         });
+
+        $(".modifyBtn").on("click", function(){
+            event.stopPropagation();
+            let postId = $(this).data("post-id");
+            location.href = "/post/modify?postId=" + postId;
+        });
+
+
+
     });
 
 

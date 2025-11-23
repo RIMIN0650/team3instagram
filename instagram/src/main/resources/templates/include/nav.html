@@ -23,6 +23,12 @@
           <a class="nav-link" href="/logout">로그아웃</a>
         </li>
         <li class="nav-item" th:if="${session.id != null}">
+          <a class="nav-link" href="/post/newpost">게시글 작성</a>
+        </li>
+        <li class="nav-item" th:if="${session.id != null}">
+          <a class="nav-link" href="/user/profile">프로필 설정</a>
+        </li>
+        <li class="nav-item" th:if="${session.id != null}">
           <a class="nav-link" href="/user/password">비밀번호 변경</a>
         </li>
       </ul>

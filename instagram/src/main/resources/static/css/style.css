@@ -1,22 +1,432 @@
+/* ----------------- 전체 기본 설정 ----------------- */
+body {
+    background-color: #f5f6f8;
+    font-family: "Noto Sans KR", sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+/* 중앙 정렬 wrapper */
 #wrap {
-    margin:0 auto;
+    margin: 0 auto;
     width: 1000px;
-    height: 1200px;
+    min-height: 100vh;
+    padding: 40px;
 }
 
-#join-box {
-    width: 600px;
-    height: 800px;
+/* 기본 제목 스타일 */
+h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* ----------------- Main 페이지 카드 ----------------- */
+.postBox {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 350px;
+    min-height: 200px;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.postBox:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.postBox p {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* 버튼 영역 오른쪽 아래 */
+.bottom-right {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* 버튼 공통 스타일 */
+.deleteBtn,
+.modifyBtn,
+.likeBtn,
+.dislikeBtn,
+.likeCancelBtn,
+.dislikeCancelBtn {
+    transition: 0.2s ease;
+    font-weight: 500;
+}
+
+.deleteBtn:hover,
+.modifyBtn:hover,
+.likeBtn:hover,
+.dislikeBtn:hover,
+.likeCancelBtn:hover,
+.dislikeCancelBtn:hover {
+    transform: scale(1.05);
+}
+
+/* ----------------- Detail 페이지 박스 ----------------- */
+.postDetailBox {
+    border: 1px solid #bbb;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    min-height: 500px;
+    padding: 30px;
+    margin: 30px auto 50px;
+    background-color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.postDetailBox p {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+/* 좋아요/싫어요 버튼 */
+.reaction-area {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reaction-area span {
+    margin-left: 5px;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ----------------- Modify 페이지 ----------------- */
+.modifyBox {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 50px auto;
+}
+
+/* 수정폼 제목 */
+.modifyBox h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #333;
+}
+
+/* 입력창 스타일 */
+.modifyBox .form-control {
+    margin-bottom: 15px;
+    resize: vertical;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* 수정 완료 버튼 */
+#updateBtn {
+    width: 100%;
+    font-weight: bold;
+    background-color: #17a2b8;
+    color: #fff;
+    border: none;
+    transition: all 0.2s ease;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+#updateBtn:hover {
+    transform: scale(1.03);
+    background-color: #138496;
+    cursor: pointer;
+}
+
+/* ----------------- 반응형 ----------------- */
+@media (max-width: 768px) {
+    #wrap {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .postBox {
+        width: 100%;
+    }
+
+    .postDetailBox {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .modifyBox {
+        width: 100%;
+        padding: 30px;
+    }
 }
 
 
-#login-box {
-    width: 600px;
-    height: 800px;
+/* 검색창과 버튼 컨테이너 */
+.search-area {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
 }
 
-#postBox{
-    border: 1px solid black;
-    width:350px;
-    height: 400px;
+/* 검색창 스타일 */
+.search-area input {
+    flex: 1; /* 남는 공간 다 차지 */
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.2s ease;
+}
+
+.search-area input:focus {
+    outline: none;
+    border-color: #17a2b8;
+    box-shadow: 0 0 5px rgba(23,162,184,0.5);
+}
+
+/* 검색 버튼 스타일 */
+#searchBtn {
+    font-weight: bold;
+    background-color: #17a2b8;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+
+#searchBtn:hover {
+    transform: scale(1.05);
+    background-color: #138496;
+    cursor: pointer;
+}
+
+/* 전체 페이지 중앙 정렬 */
+body {
+    background-color: #f5f6f8;
+    font-family: "Noto Sans KR", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 작성 박스 */
+.uploadBox {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* 제목 */
+.uploadBox h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+    text-align: center;
+    color: #333;
+}
+
+/* 입력창 스타일 */
+.uploadBox .form-control {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.2s ease;
+}
+
+.uploadBox .form-control:focus {
+    outline: none;
+    border-color: #17a2b8;
+    box-shadow: 0 0 5px rgba(23,162,184,0.5);
+}
+
+/* 업로드 버튼 */
+#uploadBtn {
+    width: 100%;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.2s ease;
+    background-color: #17a2b8;
+    color: #fff;
+    border: none;
+}
+
+#uploadBtn:hover {
+    transform: scale(1.03);
+    background-color: #138496;
+    cursor: pointer;
+}
+
+
+/* 내용 입력창을 textarea로 변경하거나 높이 조절 */
+#textContent {
+    min-height: 150px; /* 기본 높이 */
+    max-height: 400px; /* 최대 높이 */
+    resize: vertical;  /* 사용자가 세로로 크기 조절 가능 */
+}
+
+
+/* 전체 페이지 배경 및 중앙 정렬 */
+body {
+    background-color: #f5f6f8;
+    font-family: "Noto Sans KR", sans-serif;
+    padding: 40px;
+}
+
+/* 페이지 제목 */
+h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* 사용자 정보 박스 */
+.user-info {
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+/* 마이페이지 카드 컨테이너 */
+.mypage-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/* 각 카드 컬럼 */
+.mypage-column {
+    flex: 1;
+    min-width: 250px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+}
+
+/* 카드 제목 */
+.mypage-column p:first-child {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* 게시물 카드 */
+.best-item-card {
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.best-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.best-item-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* 배경색별 표시 제거, 카드 색상 통일 */
+.bg-info, .bg-success, .bg-warning {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+
+.user-info {
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.user-info h1 {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.user-info h3 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.mypage-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.best-item-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.best-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.best-item-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333;
 }

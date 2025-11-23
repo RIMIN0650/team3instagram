@@ -10,11 +10,23 @@
 </head>
 <body>
 
-<p th:text="${post.userId}"></p><p>님의 게시물 수정</p>
-<input type="hidden" id="postId" th:value="${post.postId}">
-<input type="text" class="form-control" id="newTitle" th:value="${post.title}">
-<input type="text" class="form-control" id="newTextContent" th:value="${post.textContent}">
-<button type="button" class="btn btn-info" id="updateBtn">update</button>
+<body>
+
+<body>
+
+<div class="modifyBox">
+    <h2><span th:text="${post.userId}"></span>님의 게시물 수정</h2>
+
+    <input type="hidden" id="postId" th:value="${post.postId}">
+
+    <label for="newTitle" class="form-label">제목</label>
+    <input type="text" class="form-control" id="newTitle" th:value="${post.title}">
+
+    <label for="newTextContent" class="form-label">내용</label>
+    <textarea class="form-control" id="newTextContent" rows="6" th:text="${post.textContent}"></textarea>
+
+    <button type="button" class="btn btn-info" id="updateBtn">수정 완료</button>
+</div>
 
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
