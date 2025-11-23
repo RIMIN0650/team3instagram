@@ -12,67 +12,78 @@
 
 <div class="container my-5">
 
-  <!-- 사용자 정보 -->
-  <div class="user-info mb-4">
-    <h1>마이페이지</h1>
-    <h3 th:text="${profile.displayName} + '님의 페이지'"></h3>
-    <p th:text="'이메일 : ' + ${user.email}"></p>
-    <p th:text="'상태메세지 : ' + ${profile.bio}"></p>
-    <p th:text="'성별 :  ' + ${profile.gender}"></p>
-    <p th:text="'생일 :  ' + ${profile.birthDate}"></p>
+  <div th:if="${userNotFound == 'true'}">
+    <div class="user-info mb-4">
+      <h2>일치하는 사용자 없음</h2>
+    </div>
   </div>
-
-  <!-- 탭 버튼 -->
-  <ul class="nav nav-tabs mb-3" id="mypageTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="my-posts-tab" data-bs-toggle="tab" data-bs-target="#my-posts" type="button" role="tab">내 게시물</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="liked-posts-tab" data-bs-toggle="tab" data-bs-target="#liked-posts" type="button" role="tab">좋아요</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="disliked-posts-tab" data-bs-toggle="tab" data-bs-target="#disliked-posts" type="button" role="tab">싫어요</button>
-    </li>
-  </ul>
-
-  <!-- 탭 컨텐츠 -->
-  <div class="tab-content" id="mypageTabContent">
-
-    <!-- 내 게시물 -->
-    <div class="tab-pane fade show active" id="my-posts" role="tabpanel">
-      <div class="mypage-cards mt-3">
-        <div class="best-item-card" th:each="post : ${postList}"
-             th:onclick="'location.href=\'/post/detail?postId=' + ${post.postId} + '\';'">
-          <p th:text="${post.title}"></p>
-          <p th:text="${post.textContent}"></p>
-        </div>
+  <div th:if="${userNotFound != 'true'}">
+    <div th:if="${profile == null}">
+      <p>사용자가 프로필을 설정하지 않았습니다.</p>
+      <p th:text="'이메일 : ' + ${user.email}"></p>
+    </div>
+    <div th:if="${profile != null}">
+      <div class="user-info mb-4">
+        <h1>마이페이지</h1>
+        <h3 th:text="${profile.displayName} + '님의 페이지'"></h3>
+        <p th:text="'이메일 : ' + ${user.email}"></p>
+        <p th:text="'상태메세지 : ' + ${profile.bio}"></p>
+        <p th:text="'성별 :  ' + ${profile.gender}"></p>
+        <p th:text="'생일 :  ' + ${profile.birthDate}"></p>
       </div>
     </div>
 
-    <!-- 좋아요한 게시물 -->
-    <div class="tab-pane fade" id="liked-posts" role="tabpanel">
-      <div class="mypage-cards mt-3">
-        <div class="best-item-card" th:each="likePost : ${likePostList}"
-             th:onclick="'location.href=\'/post/detail?postId=' + ${post.postId} + '\';'">
-          <p th:text="${likePost.title}"></p>
-          <p th:text="${likePost.textContent}"></p>
+    <!-- 탭 버튼 -->
+    <ul class="nav nav-tabs mb-3" id="mypageTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="my-posts-tab" data-bs-toggle="tab" data-bs-target="#my-posts" type="button" role="tab">게시물</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="liked-posts-tab" data-bs-toggle="tab" data-bs-target="#liked-posts" type="button" role="tab">좋아요</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="disliked-posts-tab" data-bs-toggle="tab" data-bs-target="#disliked-posts" type="button" role="tab">싫어요</button>
+      </li>
+    </ul>
+
+    <!-- 탭 컨텐츠 -->
+    <div class="tab-content" id="mypageTabContent">
+
+      <!-- 내 게시물 -->
+      <div class="tab-pane fade show active" id="my-posts" role="tabpanel">
+        <div class="mypage-cards mt-3">
+          <div class="best-item-card" th:each="post : ${postList}"
+               th:onclick="'location.href=\'/post/detail?postId=' + ${post.postId} + '\';'">
+            <p th:text="${post.title}"></p>
+            <p th:text="${post.textContent}"></p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 싫어요한 게시물 -->
-    <div class="tab-pane fade" id="disliked-posts" role="tabpanel">
-      <div class="mypage-cards mt-3">
-        <div class="best-item-card" th:each="dislikePost : ${dislikePostList}"
-             th:onclick="'location.href=\'/post/detail?postId=' + ${post.postId} + '\';'">
-          <p th:text="${dislikePost.title}"></p>
-          <p th:text="${dislikePost.textContent}"></p>
+      <!-- 좋아요한 게시물 -->
+      <div class="tab-pane fade" id="liked-posts" role="tabpanel">
+        <div class="mypage-cards mt-3">
+          <div class="best-item-card" th:each="likePost : ${likePostList}"
+               th:onclick="'location.href=\'/post/detail?postId=' + ${likePost.postId} + '\';'">
+            <p th:text="${likePost.title}"></p>
+            <p th:text="${likePost.textContent}"></p>
+          </div>
         </div>
       </div>
-    </div>
 
+      <!-- 싫어요한 게시물 -->
+      <div class="tab-pane fade" id="disliked-posts" role="tabpanel">
+        <div class="mypage-cards mt-3">
+          <div class="best-item-card" th:each="dislikePost : ${dislikePostList}"
+               th:onclick="'location.href=\'/post/detail?postId=' + ${dislikePost.postId} + '\';'">
+            <p th:text="${dislikePost.title}"></p>
+            <p th:text="${dislikePost.textContent}"></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-
 </div>
 
 

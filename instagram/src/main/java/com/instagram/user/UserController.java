@@ -74,6 +74,9 @@ public class UserController {
     public String getUserProfile(String userId, Model model){
 
         User user = userService.findUser(userId);
+        if(user == null){
+            model.addAttribute("userNotFound", "true");
+        }
         Profile profile = profileService.getProfile(userId);
         model.addAttribute("user", user);
         model.addAttribute("profile", profile);
