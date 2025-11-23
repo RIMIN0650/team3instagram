@@ -36,6 +36,7 @@ public class PostController {
     public String getPostDetail(int postId, Model model, HttpSession session){
         String userId = (String)session.getAttribute("id");
         PostDetail postDetail = postService.getPostDetail(postId, userId);
+        model.addAttribute("userId", userId);
         model.addAttribute("postDetail", postDetail);
         return "post/detail";
     }

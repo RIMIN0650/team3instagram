@@ -20,7 +20,9 @@ public class MainController {
     @GetMapping("/main")
     String mainPage(HttpSession session, Model model) {
 
+        String userId = (String)session.getAttribute("id");
         List<Post> postList = postService.getAllPost();
+        model.addAttribute("userId", userId);
         model.addAttribute("postList", postList);
 
 //        String userId = (String)session.getAttribute("id");

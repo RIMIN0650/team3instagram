@@ -24,13 +24,15 @@
             <p th:text="'제목 : ' + ${post.title}"></p>
             <p th:text="'내용 : ' + ${post.textContent}" class="d-none"></p>
 
-            <div class="bottom-right">
-                <button type="button" class="modifyBtn btn btn-sm btn-outline-warning" th:data-post-id="${post.postId}">
-                    수정
-                </button>
-                <button type="button" class="deleteBtn btn btn-sm btn-outline-danger" th:data-post-id="${post.postId}">
-                    삭제
-                </button>
+            <div th:if="${post.userId} == ${userId}">
+                <div class="bottom-right">
+                    <button type="button" class="modifyBtn btn btn-sm btn-outline-warning" th:data-post-id="${post.postId}">
+                        수정
+                    </button>
+                    <button type="button" class="deleteBtn btn btn-sm btn-outline-danger" th:data-post-id="${post.postId}">
+                        삭제
+                    </button>
+                </div>
             </div>
         </div>
 
