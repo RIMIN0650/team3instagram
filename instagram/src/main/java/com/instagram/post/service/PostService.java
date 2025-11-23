@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -37,7 +36,7 @@ public class PostService {
     
     // 모든 게시물 불러오기
     public List<Post> getAllPost(){
-        return postRepository.findAllByOrderByCreatedAtDesc();
+        return postRepository.findAll();
     }
 
     
@@ -145,31 +144,6 @@ public class PostService {
         return postDetail;
     }
 
-
-    public List<Post> getTop5HotPosts(){
-
-        List<Post> postList = postRepository.findAll();
-
-        int size = postList.size();
-        int[][] countLike = new int[postList.size()][2];
-
-        for(int i = 0; i < postList.size(); i++){
-            int postId = postList.get(i).getPostId();
-            countLike[i][0] = postId;
-            countLike[i][1] = likeRepository.countByPostIdAndLikeStatus(postId, 1);
-        }
-
-        Arrays.sort(countLike, (a, b) -> Integer.compare(b[1], a[1]));
-
-        List<Post> top5LikePostList = new ArrayList<>();
-        int resultSize = Math.min(5, size);
-
-        for(int i = 0; i < resultSize; i++){
-            Post post = postRepository.findByPostId(countLike[i][0]);
-            top5LikePostList.add(post);
-        }
-        return top5LikePostList;
-    }
 
 
 }
