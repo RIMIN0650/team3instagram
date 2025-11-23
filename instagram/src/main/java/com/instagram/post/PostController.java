@@ -41,4 +41,14 @@ public class PostController {
         return "post/detail";
     }
 
+    @GetMapping("/post/hot")
+    public String getTop5HotPosts(Model model){
+
+        List<Post> hotPostList = postService.getTop5HotPosts();
+        model.addAttribute("hotPostList", hotPostList);
+
+        return "post/hotPost";
+
+    }
+
 }
