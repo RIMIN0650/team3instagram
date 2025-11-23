@@ -17,6 +17,12 @@ public class MainController {
 
     private final PostService postService;
 
+    @GetMapping("/")
+    String returnToMain(){
+        return "redirect:/main";
+    }
+
+
     @GetMapping("/main")
     String mainPage(HttpSession session, Model model) {
 
