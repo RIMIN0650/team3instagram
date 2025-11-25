@@ -172,5 +172,40 @@ public class PostService {
 
     }
 
+    // 좋아요 많은 순 게시물 불러오기
+    public List<Post> getPostOrderByLikeCount(){
+        List<Post> postList = postRepository.findAll();
+        int size = postList.size();
+        int[][] countLike = new int[postList.size()][2];
+        int i = 0;
+        for(Post post : postList){
+            int postId = post.getPostId();
+            countLike[i][0] = postId;
+            countLike[i][1] = likeRepository.countByLikeStatusAndPostId(postId, 1);
+            i++;
+        }
 
+
+        Arrays.sort(countLike, (a, b) -> Integer.compare(b[1], a[1]));
+
+        List<Post> postOrderByLikeCount = new ArrayList<>();
+
+
+        for(int j = 0; j < size; j++){
+            Post post = postRepository.findByPostId(countLike[j][0]);
+            postOrderByLikeCount.add(post);
+        }
+        return postOrderByLikeCount;
+
+    }
+
+    public List<Post> getPostListOrderByCreatedAtDesc(){
+        return postRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+
+    public List<Post> getPostsOrderByLikeCount() {
+        // DB에서 좋아요 수 기준 내림차순으로 바로 가져오기
+        return postRepository.findAllOrderByLikeCountDesc();
+    }
 }

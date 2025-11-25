@@ -36,9 +36,15 @@ public class MainController {
 //        List<PostDetail> postDetailList = postService.getPostDetailList(userId);
 //        model.addAttribute("postDetail", postDetailList);
 
+        // 좋아요 순으로 게시물 정렬해서 보여주기
+        List<Post> postListOrderByLikeCount = postService.getPostsOrderByLikeCount();
+        model.addAttribute("postListOrderByLikeCount", postListOrderByLikeCount);
 
+        List<Post> postListOrderByCreatedAt = postService.getPostListOrderByCreatedAtDesc();
+        model.addAttribute("postListOrderByCreatedAt", postListOrderByCreatedAt);
 
         return "main.html";
+
     }
 
 

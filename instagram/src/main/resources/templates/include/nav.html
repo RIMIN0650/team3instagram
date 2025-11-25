@@ -18,6 +18,9 @@
         <li class="nav-item" th:if="${session.id == null}">
           <a class="nav-link" href="/join">회원가입</a>
         </li>
+        <li class="nav-item" th:if="${session.id == null}">
+          <a class="nav-link" href="/post/hot">인기 게시물</a>
+        </li>
 
         <li class="nav-item" th:if="${session.id != null}">
           <a class="nav-link" href="/logout">로그아웃</a>
