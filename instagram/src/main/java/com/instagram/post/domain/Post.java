@@ -1,10 +1,13 @@
 package com.instagram.post.domain;
 
+import com.instagram.hashtag.domain.PostHashtag;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -33,5 +36,8 @@ public class Post {
 
     @Column(name = "updated_at", insertable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostHashtag> postHashtags = new ArrayList<>();
 
 }

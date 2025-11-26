@@ -1,5 +1,9 @@
 package com.instagram.post.service;
 
+import com.instagram.hashtag.domain.Hashtag;
+import com.instagram.hashtag.domain.PostHashtag;
+import com.instagram.hashtag.repository.HashtagRepository;
+import com.instagram.hashtag.repository.PostHashtagRepository;
 import com.instagram.like.domain.Like;
 import com.instagram.like.repository.LikeRepository;
 import com.instagram.like.service.LikeService;
@@ -8,6 +12,7 @@ import com.instagram.post.dto.PostDetail;
 import com.instagram.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
@@ -15,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,16 +29,41 @@ public class PostService {
     private final PostRepository postRepository;
     private final LikeService likeService;
     private final LikeRepository likeRepository;
+    private final HashtagRepository hashtagRepository;
+    private final PostHashtagRepository postHashtagRepository;
 
     // 신규 게시물 등록
-    public Post addPost(String userId, String title, String textContent){
+    @Transactional
+    public Post addPost(String userId, String title, String textContent, String hashtagString){
         Post post = Post.builder()
                 .userId(userId)
                 .title(title)
                 .textContent(textContent)
                 .build();
+        Post savedPost = postRepository.save(post);
 
-        return postRepository.save(post);
+        List<String> tagNames = Arrays.stream(hashtagString.split("#"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        for(String tagName : tagNames){
+
+            Hashtag hashtag = hashtagRepository.findByTagName(tagName)
+                    .orElseGet(() -> hashtagRepository.save(
+                            Hashtag.builder().tagName(tagName).build()
+                    ));
+
+            PostHashtag postHashtag = PostHashtag.builder()
+                    .post(savedPost)
+                    .hashtag(hashtag)
+                    .build();
+
+            postHashtagRepository.save(postHashtag);
+        }
+
+        return savedPost;
+
     }
     
     // 모든 게시물 불러오기
@@ -79,40 +110,6 @@ public class PostService {
 
 
 
-    public List<PostDetail> getPostDetailList(String loginUserId){
-
-        List<Post> postList = postRepository.findAll();
-
-        List<PostDetail> postDetailList = new ArrayList<>();
-
-
-
-
-        for(Post post : postList){
-
-            PostDetail postDetail = PostDetail.builder()
-                    .postId(post.getPostId())
-                    .userId(post.getUserId())
-                    .likeCount(likeService.likeCount(post.getPostId()))
-                    .dislikeCount(likeService.dislikeCount(post.getPostId()))
-                    .isLike(likeService.isLikeByUser(loginUserId, post.getPostId()))
-                    .isDislike(likeService.isDislikeByUser(loginUserId, post.getPostId()))
-                    .title(post.getTitle())
-                    .textContent(post.getTextContent())
-                    .createdAt(post.getCreatedAt())
-                    .updatedAt(post.getUpdatedAt())
-                    .build();
-
-            postDetailList.add(postDetail);
-
-
-
-
-        }
-
-        return postDetailList;
-    }
-
     // 이 사용자가 좋아요, 싫어요 누른 게시물 찾기, 좋아요 : 1, 싫어요 : 0
     public List<Post> findPostLikeByUser(String userId, int likeStatus){
         List<Like> likeList = likeRepository.findByLikeStatusAndUserId(likeStatus, userId);
@@ -129,7 +126,9 @@ public class PostService {
     // 게시글 상세 정보
     public PostDetail getPostDetail(int postId, String loginUserId) {
         Post post = postRepository.findByPostId(postId);
-
+        List<String> hashtags = post.getPostHashtags().stream()
+                .map(ph -> ph.getHashtag().getTagName())
+                .toList();
         PostDetail postDetail = PostDetail.builder()
                 .postId(post.getPostId())
                 .userId(post.getUserId())
@@ -141,6 +140,7 @@ public class PostService {
                 .textContent(post.getTextContent())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
+                .hashtags(hashtags)
                 .build();
         return postDetail;
     }

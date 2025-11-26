@@ -16,6 +16,7 @@
 
     <input type="text" class="form-control" placeholder="제목" id="title">
     <textarea class="form-control" placeholder="내용" id="textContent"></textarea>
+    <input type="text" class="form-control" placeholder="#hashtags" id="hashtags">
     <button type="button" id="uploadBtn">등록</button>
 </div>
 
@@ -33,11 +34,12 @@
 
             let title = $("#title").val();
             let textContent = $("#textContent").val();
+            let hashtags = $("#hashtags").val();
 
             $.ajax({
                 type:"post"
                 , url:"/post/newpost"
-                , data:{"title":title, "textContent":textContent}
+                , data:{"title":title, "textContent":textContent, "hashtags":hashtags}
                 , success:function(data){
                     if(data.result == "success"){
                         alert("게시물 등록 성공!");

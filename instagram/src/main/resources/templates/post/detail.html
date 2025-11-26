@@ -21,7 +21,9 @@
     <p th:text="'내용 : ' + ${post.textContent}"></p>
     <p th:text="'작성일 : ' + ${post.createdAt}"></p>
     <p th:text="'수정일 : ' + ${post.updatedAt}"></p>
-
+    <div th:each="tag : ${postDetail.hashtags}">
+        <a th:text="'#' + ${tag}" th:href="@{'/post/tag?name=' + ${tag}}"></a>
+    </div>
 
 
     <!-- 좋아요 / 싫어요 버튼 영역 -->

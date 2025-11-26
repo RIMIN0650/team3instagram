@@ -5,10 +5,7 @@ import com.instagram.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -21,11 +18,14 @@ public class PostRestController {
     private final PostService postService;
 
     @PostMapping("/post/newpost")
-    public Map<String, String> uploadPost(String title, String textContent, HttpSession session) {
+    public Map<String, String> uploadPost(String title
+                                        , String textContent
+                                        , @RequestParam(required = false, defaultValue = "") String hashtags
+                                        , HttpSession session) {
 
         String id = (String) session.getAttribute("id");
 
-        Post post = postService.addPost(id, title, textContent);
+        Post post = postService.addPost(id, title, textContent, hashtags);
 
         Map<String, String> resultMap = new HashMap<>();
 
