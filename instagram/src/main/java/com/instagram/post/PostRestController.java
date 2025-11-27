@@ -1,14 +1,18 @@
 package com.instagram.post;
 
+import com.instagram.media.service.MediaService;
 import com.instagram.post.domain.Post;
 import com.instagram.post.service.PostService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,16 +20,22 @@ import java.util.Map;
 public class PostRestController {
 
     private final PostService postService;
+    private final MediaService mediaService;
 
     @PostMapping("/post/newpost")
     public Map<String, String> uploadPost(String title
                                         , String textContent
                                         , @RequestParam(required = false, defaultValue = "") String hashtags
-                                        , HttpSession session) {
+                                        , @RequestParam(value = "images", required = false) List<MultipartFile> images
+                                        , HttpSession session) throws IOException {
 
         String id = (String) session.getAttribute("id");
 
         Post post = postService.addPost(id, title, textContent, hashtags);
+
+        if (images != null && !images.isEmpty()) {
+            mediaService.uploadPostImages(post.getPostId(), images);
+        }
 
         Map<String, String> resultMap = new HashMap<>();
 

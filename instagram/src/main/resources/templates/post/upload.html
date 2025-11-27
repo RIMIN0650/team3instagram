@@ -17,6 +17,7 @@
     <input type="text" class="form-control" placeholder="제목" id="title">
     <textarea class="form-control" placeholder="내용" id="textContent"></textarea>
     <input type="text" class="form-control" placeholder="#hashtags" id="hashtags">
+    <input type="file" name="images" multiple>
     <button type="button" id="uploadBtn">등록</button>
 </div>
 
@@ -28,32 +29,45 @@
 
 
     <script>
-    $(document).ready(function(){
+        $(document).ready(function(){
 
-        $("#uploadBtn").on("click",function(){
+        $("#uploadBtn").on("click", function(){
 
             let title = $("#title").val();
             let textContent = $("#textContent").val();
             let hashtags = $("#hashtags").val();
+            let images = $("input[name='images']")[0].files;
+
+            let formData = new FormData();
+            formData.append("title", title);
+            formData.append("textContent", textContent);
+            formData.append("hashtags", hashtags);
+
+            for (let i = 0; i < images.length; i++) {
+                formData.append("images", images[i]);   // 여러 사진 업로드
+            }
 
             $.ajax({
-                type:"post"
-                , url:"/post/newpost"
-                , data:{"title":title, "textContent":textContent, "hashtags":hashtags}
-                , success:function(data){
-                    if(data.result == "success"){
+                type: "POST",
+                url: "/post/newpost",
+                data: formData,
+                processData: false,   // ★ 꼭 필요
+                contentType: false,   // ★ multipart/form-data 자동 설정을 위해 false
+                success: function(data){
+                    if(data.result === "success"){
                         alert("게시물 등록 성공!");
-                        location.href="/main";
+                        location.href = "/main";
                     } else {
                         alert("게시물 등록 실패!");
                     }
-                }
-                , error:function(){
+                },
+                error: function(){
                     alert("게시물 등록 에러");
                 }
-
             });
+
         });
+
     });
 
 

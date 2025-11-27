@@ -6,9 +6,17 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PostDetail</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    <style>
+        /* 화살표 색 변경 */
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: invert(70%) sepia(50%) saturate(400%) hue-rotate(170deg) brightness(95%) contrast(90%);
+        }
+    </style>
 </head>
 <body>
 
@@ -16,15 +24,45 @@
 
     <h3 class="mb-4">게시글 상세</h3>
 
-    <p th:text="'작성자 : ' + ${post.userId}"></p>
-    <p th:text="'제목 : ' + ${post.title}"></p>
-    <p th:text="'내용 : ' + ${post.textContent}"></p>
-    <p th:text="'작성일 : ' + ${post.createdAt}"></p>
-    <p th:text="'수정일 : ' + ${post.updatedAt}"></p>
+    <!-- 이미지 캐러셀 -->
+    <div id="postCarousel" class="carousel slide mb-3" data-bs-ride="false">
+
+        <!-- 🔻 작은 점 indicators -->
+        <div class="carousel-indicators">
+            <th:block th:each="img, iterStat : ${images}">
+                <button type="button"
+                        data-bs-target="#postCarousel"
+                        th:data-bs-slide-to="${iterStat.index}"
+                        th:classappend="${iterStat.index == 0} ? 'active'"></button>
+            </th:block>
+        </div>
+
+        <div class="carousel-inner">
+            <div th:each="img, iterStat : ${images}"
+                 th:classappend="${iterStat.index == 0} ? ' active' : ''"
+                 class="carousel-item">
+                <img th:src="@{'/images/' + ${img}}" class="d-block w-100" style="max-height: 500px; object-fit: contain;">
+            </div>
+        </div>
+
+        <!-- 좌우 버튼 -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#postCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#postCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <p th:text="'작성자 : ' + ${postDetail.userId}"></p>
+    <p th:text="'제목 : ' + ${postDetail.title}"></p>
+    <p th:text="'내용 : ' + ${postDetail.textContent}"></p>
+    <p th:text="'작성일 : ' + ${postDetail.createdAt}"></p>
+    <p th:text="'수정일 : ' + ${postDetail.updatedAt}"></p>
+
     <div th:each="tag : ${postDetail.hashtags}">
         <a th:text="'#' + ${tag}" th:href="@{'/post/tag?name=' + ${tag}}"></a>
     </div>
-
 
     <!-- 좋아요 / 싫어요 버튼 영역 -->
     <div class="reaction-area">
@@ -41,7 +79,6 @@
                 <span th:text="${post.dislikeCount}">0</span>
             </button>
         </div>
-
 
         <div th:if="${post.isLike}" class="d-flex gap-2 mt-3">
             <button type="button" class="likeCancelBtn btn btn-success d-flex align-items-center gap-2"
@@ -72,6 +109,7 @@
         </div>
 
     </div>
+
     <div th:if="${postDetail.userId} == ${userId}">
         <div class="bottom-right">
             <button type="button" class="modifyBtn btn btn-sm btn-outline-warning" th:data-post-id="${post.postId}">
@@ -84,126 +122,82 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function(){
 
-
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function(){
-
-            $('#newTextContent').on('input', function(){
-                this.style.height = 'auto'; // 기존 높이 초기화
-                this.style.height = (this.scrollHeight) + 'px'; // 내용에 맞춰 높이 조절
+        $(".likeCancelBtn").on("click", function(){
+            let postId = $(this).data("post-id");
+            $.ajax({
+                type:"delete",
+                url:"/post/like",
+                data:{postId:postId},
+                success:function(data){
+                    if(data.result === "success"){ location.reload(); }
+                    else { alert("좋아요 취소 실패"); }
+                },
+                error:function(){ alert("좋아요 취소 에러"); }
             });
-
-
-            $(".likeCancelBtn").on("click", function(){
-                let postId = $(this).data("post-id");
-                $.ajax({
-                    type:"delete"
-                    , url:"/post/like"
-                    , data:{"postId":postId}
-                    , success:function(data){
-                        if(data.result == "success"){
-                            location.reload();
-                        } else {
-                            alert("좋아요 취소 실패");
-                        }
-                    }
-                    , error:function(){
-                        alert("좋아요 취소 에러");
-                    }
-                });
-            });
-
-            $(".dislikeCancelBtn").on("click", function(){
-                let postId = $(this).data("post-id");
-                $.ajax({
-                    type:"delete"
-                    , url:"/post/like"
-                    , data:{"postId":postId}
-                    , success:function(data){
-                        if(data.result == "success"){
-                            location.reload();
-                        } else {
-                            alert("싫어요 취소 실패");
-                        }
-                    }
-                    , error:function(){
-                        alert("싫어요 취소 에러");
-                    }
-                });
-            });
-
-            $(".deleteBtn").on("click", function(){
-                let postId = $(this).data("post-id");
-
-                $.ajax({
-                    type:"delete"
-                    , url:"/post"
-                    , data:{"postId":postId}
-                    , success:function(data){
-                        if(data.result == "success"){
-                            alert("게시물이 삭제되었습니다.");
-                            location.href="/main";
-                        } else {
-                            alert("삭제 실패");
-                        }
-                    }
-                    , error:function(){
-                        alert("삭제 에러");
-                    }
-                });
-
-            });
-
-            $(".likeBtn").on("click", function(){
-                let postId = $(this).data("post-id");
-                let isLike = 1;
-                $.ajax({
-                    type:"POST"
-                    , url:"/post/like"
-                    , data:{"postId":postId, "isLike":isLike}
-                    , success:function(data){
-                        if(data.result == "success"){
-                            location.reload();
-                        } else {
-                            alert("좋아요 실패");
-                        }
-                    }
-                    , error:function(){
-                        alert("로그인이 필요합니다");
-                    }
-
-                });
-            });
-
-            $(".dislikeBtn").on("click", function(){
-                let postId = $(this).data("post-id");
-                let isLike = 0;
-
-                $.ajax({
-                    type:"POST"
-                    , url:"/post/like"
-                    , data:{"postId":postId, "isLike":isLike}
-                    , success:function(data){
-                        if(data.result == "success"){
-                            location.reload();
-                        } else {
-                            alert("싫어요 실패");
-                        }
-                    }
-                    , error:function(){
-                        alert("로그인이 필요합니다");
-                    }
-                });
-            });
-
-
         });
 
+        $(".dislikeCancelBtn").on("click", function(){
+            let postId = $(this).data("post-id");
+            $.ajax({
+                type:"delete",
+                url:"/post/like",
+                data:{postId:postId},
+                success:function(data){
+                    if(data.result === "success"){ location.reload(); }
+                    else { alert("싫어요 취소 실패"); }
+                },
+                error:function(){ alert("싫어요 취소 에러"); }
+            });
+        });
 
+        $(".deleteBtn").on("click", function(){
+            let postId = $(this).data("post-id");
+            $.ajax({
+                type:"delete",
+                url:"/post",
+                data:{postId:postId},
+                success:function(data){
+                    if(data.result === "success"){
+                        alert("게시물이 삭제되었습니다.");
+                        location.href="/main";
+                    } else { alert("삭제 실패"); }
+                },
+                error:function(){ alert("삭제 에러"); }
+            });
+        });
 
-    </script>
+        $(".likeBtn").on("click", function(){
+            let postId = $(this).data("post-id");
+            $.ajax({
+                type:"POST",
+                url:"/post/like",
+                data:{postId:postId, isLike:1},
+                success:function(data){
+                    if(data.result === "success"){ location.reload(); }
+                    else { alert("좋아요 실패"); }
+                },
+                error:function(){ alert("로그인이 필요합니다"); }
+            });
+        });
+
+        $(".dislikeBtn").on("click", function(){
+            let postId = $(this).data("post-id");
+            $.ajax({
+                type:"POST",
+                url:"/post/like",
+                data:{postId:postId, isLike:0},
+                success:function(data){
+                    if(data.result === "success"){ location.reload(); }
+                    else { alert("싫어요 실패"); }
+                },
+                error:function(){ alert("로그인이 필요합니다"); }
+            });
+        });
+    });
+</script>
 </body>
 </html>
